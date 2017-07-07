@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on Thu Jul  6 16:25:52 2017
 
@@ -16,7 +17,7 @@ from scipy import fft, signal
 #------------------------------------------------
 # Digtal filter parameters
 #------------------------------------------------
-GAIN = 25
+GAIN = 0
 lowcut = 0
 highcut = 64
 
@@ -58,35 +59,6 @@ def generateTaps(filename):
     f.close()
     return floats
 
-#------------------------------------------------
-# Create a FIR filter
-#------------------------------------------------
-taps = generateTaps('C:/Users/jfan/workspace/filters/32 Tap Raised Cos BPF.txt')
-N = len(taps)
-#------------------------------------------------
-# Plot the FIR filter coefficients and
-# the magnitude response of the filter.
-#------------------------------------------------
-figure(1)
-subplot(2,1,1)
-plot(taps, 'bo-', linewidth=2)
-title('Filter Coefficients (%d taps)' % N)
-grid(True)
-subplot(2,1,2)
-# First plot the desired ideal response as a green(ish) rectangle.
-rect = plt.Rectangle((lowcut, 0), highcut - lowcut, 1.0 * GAIN,
-                     facecolor="#60ff60", alpha=0.2)
-plt.gca().add_patch(rect)
-# Plot the frequency response of each filter
-w, h = freqz(taps, worN=8000)
-plt.plot((w/pi)*nyq_rate, absolute(h), linewidth=2)
-xlabel('Frequency (Hz)')
-ylabel('Gain')
-title('Frequency Response')
-ylim(-0.05, 1.5 * GAIN)
-grid(True)
-subplots_adjust(hspace=.5)
-
 def plotSignal(before, after, interval, title, freq):
     #------------------------------------------------------
     # Plot the original and filtered sine signals
@@ -116,6 +88,41 @@ def plotSignal(before, after, interval, title, freq):
     gs.update(wspace=0.5, hspace=0.5)
     plt.suptitle('FIR %s(%dHz)' %(title,freq))
     show()
+
+#------------------------------------------------
+# Main starts here
+#------------------------------------------------
+filename = input('Enter the filename which contains coefficients:')
+GAIN = int(input('Enter Gain:'))
+
+#------------------------------------------------
+# Create a FIR filter
+#------------------------------------------------
+taps = generateTaps(filename)
+N = len(taps)
+#------------------------------------------------
+# Plot the FIR filter coefficients and
+# the magnitude response of the filter.
+#------------------------------------------------
+figure(1)
+subplot(2,1,1)
+plot(taps, 'bo-', linewidth=2)
+title('Filter Coefficients (%d taps)' % N)
+grid(True)
+subplot(2,1,2)
+# First plot the desired ideal response as a green(ish) rectangle.
+rect = plt.Rectangle((lowcut, 0), highcut - lowcut, 1.0 * GAIN,
+                     facecolor="#60ff60", alpha=0.2)
+plt.gca().add_patch(rect)
+# Plot the frequency response of each filter
+w, h = freqz(taps, worN=8000)
+plt.plot((w/pi)*nyq_rate, absolute(h), linewidth=2)
+xlabel('Frequency (Hz)')
+ylabel('Gain')
+title('Frequency Response')
+ylim(-0.05, 1.5 * GAIN)
+grid(True)
+subplots_adjust(hspace=.5)
 
 #------------------------------------------------
 # Generate signals before and after
