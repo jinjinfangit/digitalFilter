@@ -93,7 +93,7 @@ class PlotSignal:
 
     def plotDownSampling(self, before, after):
          subplot(2,1,1)
-         plt.stem(range(self.sample_rate), before, '-.')
+         plot(range(self.sample_rate), before, '-.')
          subplot(2,1,2)
-         plt.stem(range(int(self.sample_rate/self.qfactor)), after, '-.')
+         plot(range(int(self.sample_rate/self.qfactor)), after, '-.')
          plt.show()

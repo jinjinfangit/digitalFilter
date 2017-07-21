@@ -8,7 +8,7 @@ Created on Thu Jul  6 16:25:52 2017
 #!python
 
 from numpy import sin, pi, absolute, arange, linspace, sqrt
-from scipy.signal import lfilter, freqz, bode
+from scipy.signal import filtfilt, freqz
 from pylab import figure, plot, xlabel, ylabel, ylim, title, grid, show, subplot, subplots_adjust
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
@@ -42,20 +42,11 @@ def plotSpectrum(ax, y, Fs, color):
     xlabel('Freq (Hz)')
     ylabel('Gain')
 
-
-def generateTaps(filename):
-    floats = []
-    with open(filename) as f:
-        for line in f:
-            floats.extend([float(number)* GAIN for number in line.split()])
-    f.close()
-    return floats
-
 def plotSignal(before, after, interval, title, freq):
     #------------------------------------------------------
     # Plot the original and filtered sine signals
     #------------------------------------------------------
-    delay = 0.5 * (N-1) / sample_rate
+    delay = 0.5 * (4-1) / sample_rate
     # Plot in time domain
     fig = figure(2)
     gs = gridspec.GridSpec(2, 2)
@@ -78,24 +69,26 @@ def plotSignal(before, after, interval, title, freq):
     plotSpectrum(ax3, after, sample_rate ,'r')
     plt.title('Gain vs Freq(after)')
     gs.update(wspace=0.5, hspace=0.5)
-    plt.suptitle('FIR %s(%dHz)' %(title,freq))
+    plt.suptitle('IIR %s(%dHz)' %(title,freq))
     show()
 
 #------------------------------------------------
 # Main starts here
 #------------------------------------------------
-filename = input('Enter the filename which contains coefficients:')
 GAIN = int(input('Enter Gain:'))
 lowcut = int(input('Enter low frequency:'))
 highcut = int(input('Enter high frequency:'))
 sample_rate = int(input('Enter sample rate:'))
-ffs = [10, 0.5, 100, 1000]  # frequencies of the signal
+"""
+ffs = [10, 100, 1000]  # frequencies of the signal
 if lowcut > 0 :
     ffs.append(lowcut)
 if lowcut + highcut > 1 :
     ffs.append((lowcut + highcut)/2)
 ffs.append(highcut)
 #ffs = [highcut/2]  # frequencies of the signal
+"""
+ffs = [1, 10, 100, 1000]
 #------------------------------------------------
 # Signal parameters
 #------------------------------------------------
@@ -108,32 +101,31 @@ squareInterval = linspace(0, 1, sample_rate, endpoint=False)
 nyq_rate = sample_rate / 2.0
 
 #------------------------------------------------
-# Create a FIR filter
+# Create a IIR filter
 #------------------------------------------------
-taps = generateTaps(filename)
-N = len(taps)
+
+b = [5.678524821710300150E-9,
+1.703557446513090490E-8,
+1.703557446513090490E-8,
+5.678524821710300150E-9]
+a = [1.000000000000000000E0,
+-2.992165429719710450E0,
+2.984359105193572060E0,
+-9.921936300456629000E-1
+]
+
 #------------------------------------------------
-# Plot the FIR filter coefficients and
+# Plot the IIR filter coefficients and
 # the magnitude response of the filter.
 #------------------------------------------------
 figure(1)
-subplot(2,1,1)
-plot(taps, 'bo-', linewidth=2)
-title('Filter Coefficients (%d taps)' % N)
-grid(True)
-subplot(2,1,2)
-# First plot the desired ideal response as a green(ish) rectangle.
-rect = plt.Rectangle((lowcut, 0), highcut - lowcut, 1.0 * GAIN,
-                     facecolor="#60ff60", alpha=0.2)
-plt.gca().add_patch(rect)
-# Plot the frequency response of each filter
-w, h = freqz(taps, worN=8000)
+w, h = signal.freqz(b, a, 8000)
 plt.plot((w/pi)*nyq_rate, absolute(h), linewidth=2)
-plt.plot([0, 0.5 * sample_rate], [GAIN*sqrt(0.5), GAIN* sqrt(0.5)],'--')
+plt.plot([0, 0.5 * sample_rate], [GAIN * sqrt(0.5),GAIN * sqrt(0.5)],'--')
 xlabel('Frequency (Hz)')
 ylabel('Gain')
 title('Frequency Response')
-ylim(-0.05, 1.5 * GAIN)
+ylim(-0.05, 1.5*GAIN)
 grid(True)
 subplots_adjust(hspace=.5)
 
@@ -141,10 +133,10 @@ subplots_adjust(hspace=.5)
 # Generate signals before and after
 #------------------------------------------------
 squareWave = signal.square(2 * pi * ffs[0] * squareInterval)
-filtered_squarewave = lfilter(taps, 1.0, squareWave)
+filtered_squarewave = filtfilt(b, a, squareWave)
 plotSignal(squareWave, filtered_squarewave, squareInterval, 'Square wave', ffs[0])
 
 for ff in ffs:
     sineWave = sin(2*pi*ff*sineInterval)
-    filtered_sinewave = lfilter(taps, 1.0, sineWave)
+    filtered_sinewave = filtfilt(b, a, sineWave)
     plotSignal(sineWave, filtered_sinewave, sineInterval, 'Sine wave', ff)
