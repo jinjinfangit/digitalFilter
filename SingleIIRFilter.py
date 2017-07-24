@@ -8,7 +8,7 @@ Created on Thu Jul  6 16:25:52 2017
 #!python
 
 from numpy import sin, pi, absolute, arange, linspace, sqrt
-from scipy.signal import filtfilt, freqz
+from scipy.signal import lfilter, freqz
 from pylab import figure, plot, xlabel, ylabel, ylim, title, grid, show, subplot, subplots_adjust
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
@@ -79,16 +79,16 @@ GAIN = int(input('Enter Gain:'))
 lowcut = int(input('Enter low frequency:'))
 highcut = int(input('Enter high frequency:'))
 sample_rate = int(input('Enter sample rate:'))
-"""
+
 ffs = [10, 100, 1000]  # frequencies of the signal
 if lowcut > 0 :
     ffs.append(lowcut)
 if lowcut + highcut > 1 :
     ffs.append((lowcut + highcut)/2)
 ffs.append(highcut)
-#ffs = [highcut/2]  # frequencies of the signal
-"""
-ffs = [1, 10, 100, 1000]
+if highcut/2 > 1:
+    ffs.append(highcut/2)# frequencies of the signal
+
 #------------------------------------------------
 # Signal parameters
 #------------------------------------------------
@@ -104,15 +104,16 @@ nyq_rate = sample_rate / 2.0
 # Create a IIR filter
 #------------------------------------------------
 
+#3 Pole Adj Gauss LPF
 b = [5.678524821710300150E-9,
 1.703557446513090490E-8,
 1.703557446513090490E-8,
-5.678524821710300150E-9]
+5.678524821710300150E-9
+]
 a = [1.000000000000000000E0,
 -2.992165429719710450E0,
 2.984359105193572060E0,
--9.921936300456629000E-1
-]
+-9.921936300456629000E-1]
 
 #------------------------------------------------
 # Plot the IIR filter coefficients and
@@ -133,10 +134,10 @@ subplots_adjust(hspace=.5)
 # Generate signals before and after
 #------------------------------------------------
 squareWave = signal.square(2 * pi * ffs[0] * squareInterval)
-filtered_squarewave = filtfilt(b, a, squareWave)
+filtered_squarewave = lfilter(b, a, squareWave)
 plotSignal(squareWave, filtered_squarewave, squareInterval, 'Square wave', ffs[0])
 
 for ff in ffs:
     sineWave = sin(2*pi*ff*sineInterval)
-    filtered_sinewave = filtfilt(b, a, sineWave)
+    filtered_sinewave = lfilter(b, a, sineWave)
     plotSignal(sineWave, filtered_sinewave, sineInterval, 'Sine wave', ff)
