@@ -137,10 +137,10 @@ subplots_adjust(hspace=.5)
 iirFilter = IIRFilter()
 
 squareWave = signal.square(2 * pi * ffs[0] * squareInterval)
-filtered_squarewave = iirFilter.filter(squareWave)
+filtered_squarewave = iirFilter.filter("LPF_1HZ", squareWave)
 plotSignal(squareWave, filtered_squarewave, squareInterval, 'Square wave', ffs[0])
 
 for ff in ffs:
     sineWave = sin(2*pi*ff*sineInterval)
-    filtered_sinewave = iirFilter.filter(sineWave)
+    filtered_sinewave = iirFilter.filter("LPF_1HZ", sineWave)
     plotSignal(sineWave, filtered_sinewave, sineInterval, 'Sine wave', ff)
