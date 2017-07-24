@@ -8,11 +8,12 @@ Created on Thu Jul  6 16:25:52 2017
 #!python
 
 from numpy import sin, pi, absolute, arange, linspace, sqrt
-from scipy.signal import lfilter, freqz
-from pylab import figure, plot, xlabel, ylabel, ylim, title, grid, show, subplot, subplots_adjust
+from scipy.signal import lfilter
+from pylab import figure, xlabel, ylabel, ylim, title, grid, show, subplots_adjust
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 from scipy import fft, signal
+from IIRFilter import IIRFilter
 
 #------------------------------------------------
 # Digtal filter parameters
@@ -133,11 +134,13 @@ subplots_adjust(hspace=.5)
 #------------------------------------------------
 # Generate signals before and after
 #------------------------------------------------
+iirFilter = IIRFilter()
+
 squareWave = signal.square(2 * pi * ffs[0] * squareInterval)
-filtered_squarewave = lfilter(b, a, squareWave)
+filtered_squarewave = iirFilter.filter(squareWave)
 plotSignal(squareWave, filtered_squarewave, squareInterval, 'Square wave', ffs[0])
 
 for ff in ffs:
     sineWave = sin(2*pi*ff*sineInterval)
-    filtered_sinewave = lfilter(b, a, sineWave)
+    filtered_sinewave = iirFilter.filter(sineWave)
     plotSignal(sineWave, filtered_sinewave, sineInterval, 'Sine wave', ff)
