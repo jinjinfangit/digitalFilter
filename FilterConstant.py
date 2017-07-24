@@ -13,7 +13,7 @@ class FilterConstant:
                        'Gain': 1,
                        'T1': '50HZ/60HZ',
                        'T2': None,
-                       'T3': {'Type': 'LPF', 'lowcut': 0, 'highcut': 64},
+                       'T3': {'Type': 'LPF', 'highcut': 64},
                        'T4': 8,
                        'T5': None,
                        'T6': None,
@@ -22,8 +22,8 @@ class FilterConstant:
         'EEG-SCP/DC' : {
                        'Gain': 25,
                        'T1': '50HZ/60HZ',
-                       'T2': {'Type': 'LPF', 'lowcut': 0, 'highcut': 64},
-                       'T3': {'Type': 'LPF', 'lowcut': 0, 'highcut': 64},
+                       'T2': {'Type': 'LPF', 'highcut': 64},
+                       'T3': {'Type': 'LPF', 'highcut': 64},
                        'T4': 8,
                        'T5': None,
                        'T6': None,
@@ -32,7 +32,7 @@ class FilterConstant:
         'EEG-EP' :  {
                        'Gain': 25,
                        'T1': '50HZ/60HZ',
-                       'T2': {'Type': 'HPF', 'lowcut': 1, 'highcut':64},
+                       'T2': {'Type': 'HPF', 'lowcut': 1},
                        'T3': {'Type': 'BPF', 'lowcut': 1, 'highcut':64},
                        'T4': 8,
                        'T5': None,

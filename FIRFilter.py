@@ -24,7 +24,7 @@ filename = input('Enter the directory where contains coefficients files:')
 gain = int(input('Enter Gain:'))
 lowcut = int(input('Enter low frequency:'))
 highcut = int(input('Enter high frequency:'))
-ffs = [10, highcut/2]  # frequencies of the signal
+ffs = [10, 100, 1000]  # frequencies of the signal
 
 Ts = 1.0/FilterConstant.sample_rate
 sineInterval = arange(0, 1 ,Ts) # time vector
@@ -37,7 +37,6 @@ squareInterval = linspace(0, 1, FilterConstant.sample_rate, endpoint=False)
 util = Utils(gain, FilterConstant.sample_rate, FilterConstant.qfactor)
 plotsignal = PlotSignal(gain, FilterConstant.sample_rate,
                         FilterConstant.qfactor, lowcut, highcut)
-
 taps, taps_len = util.generateTaps(filename)
 
 #------------------------------------------------
@@ -54,8 +53,17 @@ plotsignal.plotFilter(taps)
 for ff in ffs:
     sineWave = sin(2*pi*ff*sineInterval)
     squareWave = signal.square(2 * pi * ff * squareInterval)
+    #Generate filter signals
     filtered_sinewave = lfilter(taps, 1.0, sineWave)
-    downsample_sinewave = util.generateDownsample(filtered_sinewave)
     plotsignal.plotSignal(sineWave, filtered_sinewave, sineInterval,
                           'Sine wave', ff, 0.5 * (taps_len-1) / FilterConstant.sample_rate)
+    #Generate downsampling signals
+    downsample_sinewave = util.generateDownsample(filtered_sinewave)
     plotsignal.plotDownSampling(filtered_sinewave, downsample_sinewave)
+    #Generate upsampling signals
+    lfactor = 4
+    upsample_sinwave= util.generateUpsample(filtered_sinewave, lfactor)
+    plotsignal.plotUpSampling(filtered_sinewave, upsample_sinwave, lfactor)
+    lfactor = 32
+    upsample_sinwave1 = util.generateUpsample(filtered_sinewave, lfactor)
+    plotsignal.plotUpSampling(filtered_sinewave, upsample_sinwave1, lfactor)

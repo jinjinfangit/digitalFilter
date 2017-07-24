@@ -26,3 +26,10 @@ class Utils:
             outputs.append(inputs[idx*self.qfactor])
             idx = idx + 1
         return outputs
+
+    def generateUpsample(self, inputs, lfactor):
+        outputs = list()
+        for idx_input in range(self.sample_rate):
+            for idx in range(lfactor):
+                outputs.append(inputs[idx_input])
+        return outputs
