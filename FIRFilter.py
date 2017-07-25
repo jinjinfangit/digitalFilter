@@ -14,7 +14,7 @@ from NotchFilter import NotchFilter
 from Utils import Utils
 from PlotSignal import PlotSignal
 from FilterConstant import FilterConstant
-
+from RmsFilter import RmsFilter
 #------------------------------------------------
 # Signal parameters
 #------------------------------------------------
@@ -38,6 +38,7 @@ util = Utils(gain, FilterConstant.sample_rate, FilterConstant.qfactor)
 plotsignal = PlotSignal(gain, FilterConstant.sample_rate,
                         FilterConstant.qfactor, lowcut, highcut)
 taps, taps_len = util.generateTaps(filename)
+rmsFilter = RmsFilter(FilterConstant.sample_rate, FilterConstant.window_size)
 
 #------------------------------------------------
 # Main starts here
@@ -60,6 +61,10 @@ for ff in ffs:
     #Generate downsampling signals
     downsample_sinewave = util.generateDownsample(filtered_sinewave)
     plotsignal.plotDownSampling(filtered_sinewave, downsample_sinewave)
+
+    #Generate RMS window signals
+    rms_signal = rmsFilter.filter(filtered_sinewave)
+    plotsignal.plotRMSWindow(filtered_sinewave, rms_signal, FilterConstant.window_size)
     #Generate upsampling signals
     lfactor = 4
     upsample_sinwave= util.generateUpsample(filtered_sinewave, lfactor)

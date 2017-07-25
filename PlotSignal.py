@@ -108,3 +108,12 @@ class PlotSignal:
          plt.suptitle('UpSampling with factor %d' %(lfactor))
          subplots_adjust(hspace=.5)
          plt.show()
+
+    def plotRMSWindow(self, before, after, window_size):
+         subplot(2,1,1)
+         plot(range(self.sample_rate), before, '-.')
+         subplot(2,1,2)
+         plot(range(int(self.sample_rate/window_size)), after, '-.')
+         plt.suptitle('RMS signal with window size %d' %(window_size))
+         subplots_adjust(hspace=.5)
+         plt.show()

@@ -7,6 +7,7 @@ Created on Wed Jul 19 13:46:17 2017
 
 class FilterConstant:
     sample_rate = 2048
+    window_size = 32
     qfactor = 8
     sensorConfiguration = {
         'External' : {
