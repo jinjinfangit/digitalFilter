@@ -21,8 +21,8 @@ repository = 'C:\\Users\\jfan\\workspace\\digitalFilter\\dsplib\\' + filtertype 
 ffs = [1, 10, 100, 1000]
 #sinu signal
 for ff in ffs:
-    inputfilename = repository + 'input' + str(ff) +'hzHPF_1.txt'
-    outputfilename = repository + 'output' + str(ff) +'hzHPF_1.txt'
+    inputfilename = repository + 'input' + str(ff) +'hz.txt'
+    outputfilename = repository + 'output' + str(ff) +'hz.txt'
     inputs = generateFile(inputfilename)
     outputs = generateFile(outputfilename)
     plot(inputs)
@@ -31,8 +31,9 @@ for ff in ffs:
     show()
 
 # square signal
-inputfilename = repository + 'squareinput10hzHPF_1.txt'
-outputfilename = repository + 'squareoutput10hzHPF_1.txt'
+
+inputfilename = repository + 'squareinput10hz.txt'
+outputfilename = repository + 'squareoutput10hz.txt'
 inputs = generateFile(inputfilename)
 outputs = generateFile(outputfilename)
 title('Digital Filter(%s) 10HZ' %filtertype)
