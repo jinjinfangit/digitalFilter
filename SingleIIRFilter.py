@@ -79,7 +79,7 @@ def plotSignal(before, after, interval, title, freq):
 GAIN = int(input('Enter Gain:'))
 lowcut = int(input('Enter low frequency:'))
 highcut = int(input('Enter high frequency:'))
-sample_rate = int(input('Enter sample rate:'))
+sample_rate = 2048 #int(input('Enter sample rate:'))
 
 ffs = [10, 100, 1000]  # frequencies of the signal
 if lowcut > 0 :
@@ -101,20 +101,13 @@ squareInterval = linspace(0, 1, sample_rate, endpoint=False)
 # The Nyquist rate of the signal.
 nyq_rate = sample_rate / 2.0
 
+chose_filter = 'LPF_' + str(highcut) + 'HZ'
 #------------------------------------------------
-# Create a IIR filter
+# Generate signals before and after
 #------------------------------------------------
-
-#3 Pole Adj Gauss LPF
-b = [5.678524821710300150E-9,
-1.703557446513090490E-8,
-1.703557446513090490E-8,
-5.678524821710300150E-9
-]
-a = [1.000000000000000000E0,
--2.992165429719710450E0,
-2.984359105193572060E0,
--9.921936300456629000E-1]
+iirFilter = IIRFilter()
+b = iirFilter.IIRFilterConf[chose_filter]['numerator']
+a = iirFilter.IIRFilterConf[chose_filter]['denominator']
 
 #------------------------------------------------
 # Plot the IIR filter coefficients and
@@ -131,16 +124,13 @@ ylim(-0.05, 1.5*GAIN)
 grid(True)
 subplots_adjust(hspace=.5)
 
-#------------------------------------------------
-# Generate signals before and after
-#------------------------------------------------
-iirFilter = IIRFilter()
+
 
 squareWave = signal.square(2 * pi * ffs[0] * squareInterval)
-filtered_squarewave = iirFilter.filter("LPF_1HZ", squareWave)
+filtered_squarewave = iirFilter.filter(chose_filter, squareWave)
 plotSignal(squareWave, filtered_squarewave, squareInterval, 'Square wave', ffs[0])
 
 for ff in ffs:
     sineWave = sin(2*pi*ff*sineInterval)
-    filtered_sinewave = iirFilter.filter("LPF_1HZ", sineWave)
+    filtered_sinewave = iirFilter.filter(chose_filter, sineWave)
     plotSignal(sineWave, filtered_sinewave, sineInterval, 'Sine wave', ff)
