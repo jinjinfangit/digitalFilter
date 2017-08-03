@@ -29,6 +29,15 @@ if filtertype == 'RMS':
                             FilterConstant.qfactor, 0, 60)
     plotsignal.plotRMSWindow(inputs, outputs[:64], FilterConstant.window_size)
     show()
+    inputfilename = repository + 'inputSqr.txt'
+    inputs = generateFile(inputfilename)
+    outputfilename = repository + 'outputSqr.txt'
+    outputs = generateFile(outputfilename)
+
+    plotsignal = PlotSignal(1, FilterConstant.sample_rate,
+                            FilterConstant.qfactor, 0, 60)
+    plotsignal.plotRMSWindow(inputs, outputs[:64], FilterConstant.window_size)
+    show()
 else:
     ffs = [1, 10, 50, 60, 100, 1000]
     #sinu signal
