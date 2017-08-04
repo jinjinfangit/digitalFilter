@@ -27,9 +27,9 @@ class Utils:
             idx = idx + 1
         return outputs
 
-    def generateUpsample(self, inputs, lfactor):
+    def generateUpsample(self, inputs, sample_rate, lfactor):
         outputs = list()
-        for idx_input in range(self.sample_rate):
+        for idx_input in range(sample_rate):
             for idx in range(lfactor):
                 outputs.append(inputs[idx_input])
         return outputs

@@ -24,7 +24,6 @@ if filtertype == 'RMS':
     inputs = generateFile(inputfilename)
     outputfilename = repository + 'output.txt'
     outputs = generateFile(outputfilename)
-
     plotsignal = PlotSignal(1, FilterConstant.sample_rate,
                             FilterConstant.qfactor, 0, 60)
     plotsignal.plotRMSWindow(inputs, outputs[:64], FilterConstant.window_size)
@@ -33,11 +32,40 @@ if filtertype == 'RMS':
     inputs = generateFile(inputfilename)
     outputfilename = repository + 'outputSqr.txt'
     outputs = generateFile(outputfilename)
-
-    plotsignal = PlotSignal(1, FilterConstant.sample_rate,
-                            FilterConstant.qfactor, 0, 60)
     plotsignal.plotRMSWindow(inputs, outputs[:64], FilterConstant.window_size)
     show()
+elif filtertype == 'downsample':
+    inputfilename = repository + 'input.txt'
+    inputs = generateFile(inputfilename)
+    outputfilename = repository + 'output.txt'
+    outputs = generateFile(outputfilename)
+    plotsignal = PlotSignal(1, FilterConstant.sample_rate,
+                            FilterConstant.qfactor, 0, 60)
+    plotsignal.plotDownSampling(inputs, outputs[:256])
+    show()
+    inputfilename = repository + 'inputSqr.txt'
+    inputs = generateFile(inputfilename)
+    outputfilename = repository + 'outputSqr.txt'
+    outputs = generateFile(outputfilename)
+    plotsignal.plotDownSampling(inputs, outputs[:256])
+    show()
+elif filtertype == 'upsample':
+    lfactors = [4, 32]
+    for lfactor in lfactors:
+        inputfilename = repository + 'input.txt'
+        inputs = generateFile(inputfilename)
+        outputfilename = repository + 'output' + str(lfactor) + '.txt'
+        outputs = generateFile(outputfilename)
+        plotsignal = PlotSignal(1, FilterConstant.sample_rate,
+                                FilterConstant.qfactor, 0, 60)
+        plotsignal.plotUpSampling(inputs, outputs, 64, lfactor)
+        show()
+        inputfilename = repository + 'inputSqr.txt'
+        inputs = generateFile(inputfilename)
+        outputfilename = repository + 'outputSqr' + str(lfactor) + '.txt'
+        outputs = generateFile(outputfilename)
+        plotsignal.plotUpSampling(inputs, outputs, 64, lfactor)
+        show()
 else:
     ffs = [1, 10, 50, 60, 100, 1000]
     #sinu signal

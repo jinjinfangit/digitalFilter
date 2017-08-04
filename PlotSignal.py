@@ -100,11 +100,11 @@ class PlotSignal:
          subplots_adjust(hspace=.5)
          plt.show()
 
-    def plotUpSampling(self, before, after, lfactor):
+    def plotUpSampling(self, before, after, sample_rate, lfactor):
          subplot(2,1,1)
-         plot(range(self.sample_rate), before, '-.')
+         plot(range(sample_rate), before, '-.')
          subplot(2,1,2)
-         plot(range(int(self.sample_rate*lfactor)), after, '-.')
+         plot(range(int(sample_rate*lfactor)), after, '-.')
          plt.suptitle('UpSampling with factor %d' %(lfactor))
          subplots_adjust(hspace=.5)
          plt.show()
